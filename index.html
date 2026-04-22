@@ -397,98 +397,185 @@
     </div>
   </div>
     <div style="position:fixed;top:20px;right:20px;display:flex;gap:10px;z-index:9999;">
-    <button id="copyBtn" style="padding:10px 16px;background:#ef1d25;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;">Copy as PNG</button>
-    <button id="downloadBtn" style="padding:10px 16px;background:#111;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;">Download PNG</button>
+    <button id="copyBtn" style="padding:10px 16px;background:#ef1d25;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;">Copy Form as Image</button>
   </div>
 
   <script>
-    function downloadBlob(blob, filename) {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    function escapeXml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
     }
 
-    async function renderPageToCanvas() {
-      const element = document.querySelector('.page');
-      const cloned = element.cloneNode(true);
-      cloned.style.margin = '0';
-      cloned.style.boxShadow = 'none';
+    function buildFormSvg() {
+      const width = 794;
+      const height = 1123;
+      const bannerHref = document.querySelector('.header-banner img')?.src || '';
 
-      const styleTag = document.querySelector('style');
-      const width = element.offsetWidth;
-      const height = element.offsetHeight;
-      const scale = 2;
+      return `
+      <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+        <rect width="100%" height="100%" fill="#ffffff"/>
 
-      const wrapper = document.createElement('div');
-      wrapper.appendChild(cloned);
+        <image href="${bannerHref}" x="22" y="10" width="750" height="110" preserveAspectRatio="xMidYMid meet"/>
 
-      const xhtml = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="${width * scale}" height="${height * scale}" viewBox="0 0 ${width} ${height}">
-          <foreignObject x="0" y="0" width="100%" height="100%">
-            <div xmlns="http://www.w3.org/1999/xhtml">
-              <style>${styleTag.innerHTML}</style>
-              ${wrapper.innerHTML}
-            </div>
-          </foreignObject>
-        </svg>`;
+        <text x="397" y="138" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#111">
+          150/2 Akkalkot Road, Near MIDC Post Office, Solapur. Tel 2372222, 2376666
+        </text>
+        <line x1="22" y1="150" x2="772" y2="150" stroke="#666" stroke-width="2"/>
 
-      const blob = new Blob([xhtml], { type: 'image/svg+xml;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
+        <text x="34" y="176" font-family="Arial" font-size="16">Date :</text>
+        <text x="410" y="176" font-family="Arial" font-size="16">Quote No :</text>
 
+        <rect x="22" y="190" width="750" height="39" fill="#fff" stroke="#222" stroke-width="1.6"/>
+        <line x1="397" y1="190" x2="397" y2="229" stroke="#222" stroke-width="1.6"/>
+        <text x="34" y="214" font-family="Arial" font-size="15">NAME</text>
+
+        <rect x="22" y="229" width="750" height="39" fill="#fff" stroke="#222" stroke-width="1.6"/>
+        <line x1="397" y1="229" x2="397" y2="268" stroke="#222" stroke-width="1.6"/>
+        <text x="34" y="253" font-family="Arial" font-size="15">ADDRESS</text>
+
+        <rect x="22" y="268" width="750" height="39" fill="#fff" stroke="#222" stroke-width="1.6"/>
+        <line x1="397" y1="268" x2="397" y2="307" stroke="#222" stroke-width="1.6"/>
+        <text x="34" y="292" font-family="Arial" font-size="15">MOBILE NO</text>
+
+        <rect x="22" y="307" width="750" height="39" fill="#fff" stroke="#222" stroke-width="1.6"/>
+        <line x1="397" y1="307" x2="397" y2="346" stroke="#222" stroke-width="1.6"/>
+        <text x="34" y="331" font-family="Arial" font-size="15">NAME OF EXECUTIVE</text>
+
+        <rect x="22" y="346" width="750" height="39" fill="#fff" stroke="#222" stroke-width="1.6"/>
+        <line x1="397" y1="346" x2="397" y2="385" stroke="#222" stroke-width="1.6"/>
+        <text x="34" y="370" font-family="Arial" font-size="15">MOBILE NO</text>
+
+        <g transform="translate(22, 400)">
+          <rect x="0" y="0" width="750" height="248" fill="#fff" stroke="#222" stroke-width="1.6"/>
+          <line x1="195" y1="0" x2="195" y2="248" stroke="#222" stroke-width="1.6"/>
+          <line x1="495" y1="0" x2="495" y2="248" stroke="#222" stroke-width="1.6"/>
+          <line x1="622.5" y1="0" x2="622.5" y2="248" stroke="#222" stroke-width="1.6"/>
+
+          ${[31,62,93,124,155,186,217].map(y => `<line x1="0" y1="${y}" x2="750" y2="${y}" stroke="#222" stroke-width="1.6"/>`).join('')}
+
+          <text x="12" y="21" font-family="Arial" font-size="15">MODEL</text>
+          <text x="530" y="21" text-anchor="middle" font-family="Arial" font-size="15">Scheme - 1</text>
+          <text x="686" y="21" text-anchor="middle" font-family="Arial" font-size="15">Scheme - 2</text>
+
+          <text x="12" y="52" font-family="Arial" font-size="15">Ex. Showroom</text>
+          <text x="12" y="83" font-family="Arial" font-size="15">RTO Reg Expenses</text>
+          <text x="12" y="114" font-family="Arial" font-size="15">Incidental Charges</text>
+          <text x="12" y="145" font-family="Arial" font-size="15">Insurance</text>
+          <text x="12" y="176" font-family="Arial" font-size="15">Hypothecation</text>
+          <text x="12" y="207" font-family="Arial" font-size="15">Accessory / Good Life</text>
+          <text x="12" y="238" font-family="Arial" font-size="15">Total</text>
+        </g>
+
+        <g transform="translate(22, 664)">
+          <rect x="0" y="0" width="750" height="368" fill="#fff" stroke="#222" stroke-width="1.8"/>
+          <line x1="450" y1="0" x2="450" y2="368" stroke="#222" stroke-width="1.8"/>
+
+          <text x="12" y="22" font-family="Arial" font-size="14">Terms &amp; Condition :</text>
+          <text x="24" y="50" font-family="Arial" font-size="13">1. In view of our Principal’s policy of continuously improving the products they reserve</text>
+          <text x="24" y="67" font-family="Arial" font-size="13">   the right after specification or designs without prior notice &amp; without liability.</text>
+          <text x="24" y="95" font-family="Arial" font-size="13">2. The prices ruling at the time of delivery will be charged.</text>
+          <text x="24" y="123" font-family="Arial" font-size="13">3. Terms of payment - Full Payment in advance by Cash or Demand Draft in favor of</text>
+          <text x="24" y="140" font-family="Arial" font-size="13">   CHAVAN AUTOMOBILES, SOLAPUR</text>
+          <text x="24" y="168" font-family="Arial" font-size="13">4. Interest whatsoever will not be paid for any delay in delivery or cancellation of vehicle.</text>
+          <text x="24" y="185" font-family="Arial" font-size="13">   In case of cancellation, refund of deposited amount will be paid strictly by cheque.</text>
+          <text x="24" y="213" font-family="Arial" font-size="13">5. Bring any of the following Address Proof.</text>
+          <text x="24" y="230" font-family="Arial" font-size="13">   a) Aadhar Card b) Election Identity Card c) Electricity Bill</text>
+          <text x="24" y="247" font-family="Arial" font-size="13">   d) BSNL Landline Telephone Bill e) LIC Policy</text>
+          <text x="24" y="264" font-family="Arial" font-size="13">   f) ½ Photo g) Trade Certificate (Bank)</text>
+
+          <rect x="540" y="16" width="96" height="20" fill="#ffef00"/>
+          <text x="588" y="31" text-anchor="middle" font-family="Arial" font-size="15">Bank Details</text>
+
+          <text x="495" y="62" font-family="Arial" font-size="14">CHAVAN AUTOMOBILES</text>
+          <text x="495" y="84" font-family="Arial" font-size="14">BANK OF MAHARASHTRA</text>
+          <text x="495" y="106" font-family="Arial" font-size="14">Branch Sakhar Peth</text>
+          <text x="495" y="128" font-family="Arial" font-size="14">A/C.NO. 60080004004</text>
+          <text x="495" y="150" font-family="Arial" font-size="14">IFSC CODE MAHB0000464</text>
+          <text x="495" y="172" font-family="Arial" font-size="14">MICR CODE 413014005</text>
+
+          <rect x="520" y="200" width="148" height="148" fill="#fff" stroke="#000" stroke-width="1.5"/>
+          <rect x="530" y="210" width="34" height="34" fill="#fff" stroke="#000" stroke-width="5"/>
+          <rect x="624" y="210" width="34" height="34" fill="#fff" stroke="#000" stroke-width="5"/>
+          <rect x="530" y="304" width="34" height="34" fill="#fff" stroke="#000" stroke-width="5"/>
+          <g fill="#000">
+            <rect x="575" y="215" width="8" height="8"/><rect x="590" y="215" width="8" height="8"/><rect x="607" y="215" width="8" height="8"/>
+            <rect x="575" y="232" width="8" height="8"/><rect x="607" y="232" width="8" height="8"/>
+            <rect x="575" y="249" width="8" height="8"/><rect x="590" y="249" width="8" height="8"/><rect x="607" y="249" width="8" height="8"/>
+            <rect x="590" y="266" width="8" height="8"/><rect x="607" y="266" width="8" height="8"/>
+            <rect x="575" y="283" width="8" height="8"/><rect x="624" y="283" width="8" height="8"/>
+            <rect x="575" y="300" width="8" height="8"/><rect x="590" y="300" width="8" height="8"/><rect x="607" y="300" width="8" height="8"/><rect x="624" y="300" width="8" height="8"/>
+          </g>
+        </g>
+
+        <g transform="translate(22, 1038)">
+          <rect x="0" y="0" width="750" height="67" fill="#ef1d25"/>
+          <line x1="210" y1="0" x2="210" y2="67" stroke="rgba(255,255,255,0.45)" stroke-width="2"/>
+          <line x1="390" y1="0" x2="390" y2="67" stroke="rgba(255,255,255,0.45)" stroke-width="2"/>
+          <line x1="525" y1="0" x2="525" y2="67" stroke="rgba(255,255,255,0.45)" stroke-width="2"/>
+          <line x1="637" y1="0" x2="637" y2="67" stroke="rgba(255,255,255,0.45)" stroke-width="2"/>
+
+          <text x="105" y="28" text-anchor="middle" font-family="Arial" font-size="16" font-weight="700" fill="#fff">चव्हाण ऑटोमोबाईल्स~</text>
+
+          <text x="300" y="22" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#fff">अक्कलकोट रोड</text>
+          <text x="300" y="43" text-anchor="middle" font-family="Arial" font-size="15" font-weight="700" fill="#fff">8805986570</text>
+
+          <text x="457" y="20" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#fff">सुमन नगर, बाळे</text>
+          <text x="457" y="40" text-anchor="middle" font-family="Arial" font-size="14" font-weight="700" fill="#fff">8805986835</text>
+          <text x="457" y="56" text-anchor="middle" font-family="Arial" font-size="14" font-weight="700" fill="#fff">8805986807</text>
+
+          <text x="581" y="22" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#fff">बोरामणी ब्रांच</text>
+          <text x="581" y="43" text-anchor="middle" font-family="Arial" font-size="15" font-weight="700" fill="#fff">8956507941</text>
+
+          <text x="694" y="22" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#fff">हदरे वस्ती</text>
+          <text x="694" y="43" text-anchor="middle" font-family="Arial" font-size="15" font-weight="700" fill="#fff">8805986565</text>
+        </g>
+      </svg>`;
+    }
+
+    async function svgToPngBlob(svgText) {
+      const svgBlob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+      const svgUrl = URL.createObjectURL(svgBlob);
       try {
         const img = await new Promise((resolve, reject) => {
           const image = new Image();
           image.onload = () => resolve(image);
           image.onerror = reject;
-          image.src = url;
+          image.src = svgUrl;
         });
 
+        const scale = 2;
         const canvas = document.createElement('canvas');
-        canvas.width = width * scale;
-        canvas.height = height * scale;
+        canvas.width = 794 * scale;
+        canvas.height = 1123 * scale;
         const ctx = canvas.getContext('2d');
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        return canvas;
+
+        return await new Promise((resolve, reject) => {
+          canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('PNG blob failed')), 'image/png');
+        });
       } finally {
-        URL.revokeObjectURL(url);
+        URL.revokeObjectURL(svgUrl);
       }
     }
 
     document.getElementById('copyBtn').addEventListener('click', async () => {
       try {
-        const canvas = await renderPageToCanvas();
-        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-        if (!blob) throw new Error('PNG generation failed');
-
+        const blob = await svgToPngBlob(buildFormSvg());
         if (!navigator.clipboard || !window.ClipboardItem) {
-          alert('Direct image copy is not supported here. Use Download PNG.');
+          alert('This browser does not support direct image copy. Use Chrome desktop for clipboard image copy.');
           return;
         }
-
         await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-        alert('Copied as PNG.');
+        alert('Form copied as image. Paste it where needed.');
       } catch (err) {
         console.error(err);
-        alert('Copy failed. Use Download PNG. If this page was opened as a local file, some browsers block image copy from clipboard.');
-      }
-    });
-
-    document.getElementById('downloadBtn').addEventListener('click', async () => {
-      try {
-        const canvas = await renderPageToCanvas();
-        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-        if (!blob) throw new Error('PNG generation failed');
-        downloadBlob(blob, 'hero-quotation.png');
-      } catch (err) {
-        console.error(err);
-        alert('Download failed. The root cause was usually external script/image loading. It has now been removed. Refresh once and try Download PNG again.');
+        alert('Copy failed because this browser or file mode blocks clipboard image writing. Open in Chrome and use the page over http:// or https:// for direct image copy.');
       }
     });
   </script>
