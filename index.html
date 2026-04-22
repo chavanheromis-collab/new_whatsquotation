@@ -410,13 +410,61 @@
         .replace(/'/g, '&apos;');
     }
 
-    function buildFormSvg() {
+    async function getImageBase64(imgEl) {
+      return new Promise((resolve) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = imgEl.naturalWidth;
+        canvas.height = imgEl.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(imgEl, 0, 0);
+        resolve(canvas.toDataURL('image/png'));
+      });
+    }
+
+    async function buildFormSvg() {
       const width = 794;
       const height = 1123;
-      const bannerHref = document.querySelector('.header-banner img')?.src || '';
+
+      const imgEl = document.querySelector('.header-banner img');
+      let bannerHref = '';
+
+      if (imgEl && imgEl.complete) {
+        bannerHref = await getImageBase64(imgEl); // embed image
+      }
 
       return `
       <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+        <rect width="100%" height="100%" fill="#ffffff"/>
+
+        ${bannerHref ? `<image href="${bannerHref}" x="22" y="10" width="750" height="110"/>` : ''}
+
+        <text x="397" y="138" text-anchor="middle" font-family="Arial" font-size="15">150/2 Akkalkot Road, Near MIDC Post Office, Solapur. Tel 2372222, 2376666</text>
+        <line x1="22" y1="150" x2="772" y2="150" stroke="#666" stroke-width="2"/>
+
+        <text x="34" y="176" font-family="Arial" font-size="16">Date :</text>
+        <text x="410" y="176" font-family="Arial" font-size="16">Quote No :</text>
+
+        <rect x="22" y="190" width="750" height="39" fill="#fff" stroke="#222" stroke-width="1.6"/>
+        <line x1="397" y1="190" x2="397" y2="229" stroke="#222" stroke-width="1.6"/>
+        <text x="34" y="214" font-family="Arial" font-size="15">NAME</text>
+
+        <rect x="22" y="229" width="750" height="39" fill="#fff" stroke="#222" stroke-width="1.6"/>
+        <line x1="397" y1="229" x2="397" y2="268" stroke="#222" stroke-width="1.6"/>
+        <text x="34" y="253" font-family="Arial" font-size="15">ADDRESS</text>
+
+        <rect x="22" y="268" width="750" height="39" fill="#fff" stroke="#222" stroke-width="1.6"/>
+        <line x1="397" y1="268" x2="397" y2="307" stroke="#222" stroke-width="1.6"/>
+        <text x="34" y="292" font-family="Arial" font-size="15">MOBILE NO</text>
+
+        <rect x="22" y="307" width="750" height="39" fill="#fff" stroke="#222" stroke-width="1.6"/>
+        <line x1="397" y1="307" x2="397" y2="346" stroke="#222" stroke-width="1.6"/>
+        <text x="34" y="331" font-family="Arial" font-size="15">NAME OF EXECUTIVE</text>
+
+        <rect x="22" y="346" width="750" height="39" fill="#fff" stroke="#222" stroke-width="1.6"/>
+        <line x1="397" y1="346" x2="397" y2="385" stroke="#222" stroke-width="1.6"/>
+        <text x="34" y="370" font-family="Arial" font-size="15">MOBILE NO</text>
+      </svg>`;
+    }" height="${height}" viewBox="0 0 ${width} ${height}">
         <rect width="100%" height="100%" fill="#ffffff"/>
 
         <image href="${bannerHref}" x="22" y="10" width="750" height="110" preserveAspectRatio="xMidYMid meet"/>
@@ -566,7 +614,8 @@
 
     document.getElementById('copyBtn').addEventListener('click', async () => {
       try {
-        const blob = await svgToPngBlob(buildFormSvg());
+        const svg = await buildFormSvg();
+        const blob = await svgToPngBlob(svg);
         if (!navigator.clipboard || !window.ClipboardItem) {
           alert('This browser does not support direct image copy. Use Chrome desktop for clipboard image copy.');
           return;
