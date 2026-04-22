@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hero Quotation Layout</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #dcdcdc;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #111;
+    }
+
+    .page {
+      width: 794px;
+      margin: 14px auto;
+      background: #dcdcdc;
+      padding: 0 22px 18px;
+    }
+
+    .header-banner {
+      width: 100%;
+      height: 110px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 6px;
+    }
+
+    .header-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .hero-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-left: 10px;
+      padding-top: 8px;
+    }
+
+    .hero-symbol {
+      position: relative;
+      width: 48px;
+      height: 54px;
+    }
+
+    .hero-symbol::before,
+    .hero-symbol::after {
+      content: "";
+      position: absolute;
+      width: 15px;
+      height: 26px;
+      background: #e51c23;
+      top: 12px;
+    }
+
+    .hero-symbol::before {
+      left: 4px;
+      clip-path: polygon(0 0, 100% 22%, 100% 78%, 0 100%);
+    }
+
+    .hero-symbol::after {
+      right: 4px;
+      background: #000;
+      clip-path: polygon(0 22%, 100% 0, 100% 100%, 0 78%);
+    }
+
+    .hero-text {
+      font-size: 56px;
+      font-weight: 700;
+      color: #e51c23;
+      line-height: 1;
+      letter-spacing: -1px;
+      margin-top: 6px;
+    }
+
+    .dealer-logo {
+      width: 365px;
+      height: 90px;
+      background: #ef1d25;
+      position: relative;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .dealer-logo .blk1,
+    .dealer-logo .blk2,
+    .dealer-logo .blk3 {
+      position: absolute;
+      background: #000;
+      transform: skewX(-24deg);
+    }
+
+    .dealer-logo .blk1 { left: 18px; top: 33px; width: 18px; height: 30px; }
+    .dealer-logo .blk2 { left: 42px; top: 15px; width: 18px; height: 50px; }
+    .dealer-logo .blk3 { left: 66px; top: -2px; width: 18px; height: 30px; }
+
+    .dealer-logo .brand {
+      position: absolute;
+      right: 52px;
+      top: 10px;
+      text-align: center;
+      line-height: 1.05;
+    }
+
+    .dealer-logo .brand .line1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 6px;
+    }
+
+    .dealer-logo .brand .line2 {
+      font-size: 22px;
+      margin-top: 6px;
+    }
+
+    .address-line {
+      text-align: center;
+      font-size: 15px;
+      margin: 4px 0 6px;
+    }
+
+    .rule {
+      border-top: 2px solid #666;
+      margin-bottom: 12px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      table-layout: fixed;
+      background: transparent;
+    }
+
+    td, th {
+      border: 1.6px solid #222;
+      padding: 0;
+      vertical-align: middle;
+      font-size: 14px;
+    }
+
+    .meta {
+      margin-bottom: 12px;
+    }
+
+    .meta .head td {
+      border: none;
+      font-size: 16px;
+      padding: 2px 0 2px 12px;
+      height: 24px;
+    }
+
+    .meta .form td {
+      height: 39px;
+      padding: 4px 8px;
+      font-size: 14px;
+    }
+
+    .meta .label {
+      width: 50%;
+      font-weight: 400;
+      font-size: 15px;
+    }
+
+    .pricing {
+      margin-bottom: 16px;
+    }
+
+    .pricing td {
+      height: 31px;
+      padding: 4px 8px;
+      font-size: 15px;
+    }
+
+    .pricing .c1 { width: 26%; }
+    .pricing .c2 { width: 40%; }
+    .pricing .c3,
+    .pricing .c4 { width: 17%; text-align: center; }
+
+    .footer-box {
+      display: grid;
+      grid-template-columns: 60% 40%;
+      border: 1.8px solid #222;
+      min-height: 368px;
+      margin-bottom: 8px;
+    }
+
+    .terms {
+      border-right: 1.8px solid #222;
+      padding: 8px 10px 10px;
+      position: relative;
+    }
+
+    .terms-title {
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .terms ol {
+      margin: 0 0 0 22px;
+      padding-left: 18px;
+      font-size: 13px;
+      line-height: 1.22;
+    }
+
+    .terms li { margin-bottom: 8px; }
+
+    .bank {
+      padding: 18px 14px 10px;
+      text-align: center;
+      position: relative;
+    }
+
+    .bank-title {
+      display: inline-block;
+      background: #ffef00;
+      padding: 1px 4px;
+      font-size: 15px;
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+
+    .bank-lines {
+      font-size: 14px;
+      line-height: 1.5;
+      text-align: left;
+      width: fit-content;
+      margin: 0 auto;
+    }
+
+    .qr {
+      width: 148px;
+      height: 148px;
+      margin: 16px auto 0;
+      background:
+        linear-gradient(90deg, #000 10px, transparent 10px) 0 0/22px 22px,
+        linear-gradient(#000 10px, transparent 10px) 0 0/22px 22px,
+        linear-gradient(90deg, transparent 12px, #000 12px 18px, transparent 18px) 0 0/22px 22px,
+        linear-gradient(transparent 12px, #000 12px 18px, transparent 18px) 0 0/22px 22px,
+        #fff;
+      border: 6px solid #fff;
+      box-shadow: inset 0 0 0 1px #000;
+      position: relative;
+    }
+
+    .qr::before,
+    .qr::after,
+    .qr span {
+      content: "";
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      border: 5px solid #000;
+      background: #fff;
+    }
+
+    .qr::before { top: 8px; left: 8px; }
+    .qr::after { top: 8px; right: 8px; }
+    .qr span { bottom: 8px; left: 8px; }
+
+    .bottom-strip {
+      width: 100%;
+      background: #ef1d25;
+      color: #fff;
+      display: grid;
+      grid-template-columns: 28% 24% 18% 15% 15%;
+      align-items: center;
+      min-height: 67px;
+      margin-top: 6px;
+    }
+
+    .bottom-strip > div {
+      padding: 8px 10px;
+      text-align: center;
+      border-right: 2px solid rgba(255,255,255,0.45);
+      line-height: 1.15;
+    }
+
+    .bottom-strip > div:last-child { border-right: none; }
+
+    .bottom-strip .dealer-name {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .bottom-strip .branch {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .bottom-strip .phone {
+      display: block;
+      font-size: 15px;
+      margin-top: 3px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header-banner">
+      <!-- Replace src with your hosted image if needed -->
+      <img src="CHAVAN HERO.png" alt="Header Banner" />
+    </div>
+
+    <div class="address-line">150/2 Akkalkot Road, Near MIDC Post Office, Solapur. Tel 2372222, 2376666</div>
+    <div class="rule"></div>
+
+    <table class="meta">
+      <tr class="head">
+        <td>Date :</td>
+        <td>Quote No :</td>
+      </tr>
+      <tr class="form"><td class="label">NAME</td><td></td></tr>
+      <tr class="form"><td class="label">ADDRESS</td><td></td></tr>
+      <tr class="form"><td class="label">MOBILE NO</td><td></td></tr>
+      <tr class="form"><td class="label">NAME OF EXECUTIVE</td><td></td></tr>
+      <tr class="form"><td class="label">MOBILE NO</td><td></td></tr>
+    </table>
+
+    <table class="pricing">
+      <colgroup>
+        <col class="c1" />
+        <col class="c2" />
+        <col class="c3" />
+        <col class="c4" />
+      </colgroup>
+      <tr>
+        <td>MODEL</td>
+        <td></td>
+        <td>Scheme - 1</td>
+        <td>Scheme - 2</td>
+      </tr>
+      <tr><td>Ex. Showroom</td><td></td><td></td><td></td></tr>
+      <tr><td>RTO Reg Expenses</td><td></td><td></td><td></td></tr>
+      <tr><td>Incidental Charges</td><td></td><td></td><td></td></tr>
+      <tr><td>Insurance</td><td></td><td></td><td></td></tr>
+      <tr><td>Hypothecation</td><td></td><td></td><td></td></tr>
+      <tr><td>Accessory / Good Life</td><td></td><td></td><td></td></tr>
+      <tr><td>Total</td><td></td><td></td><td></td></tr>
+    </table>
+
+    <div class="footer-box">
+      <div class="terms">
+        <div class="terms-title">Terms &amp; Condition :</div>
+        <ol>
+          <li>In view of our Principal’s policy of continuously improving the products they reserve the right after specification or designs without prior notice &amp; without liability.</li>
+          <li>The prices ruling at the time of delivery will be charged.</li>
+          <li>Terms of payment - Full Payment in advance by Cash or Demand Draft in favor of CHAVAN AUTOMOBILES, SOLAPUR</li>
+          <li>Interest whatsoever will not be paid for any delay in delivery or cancellation of vehicle, In case of cancellation, refund of deposited amount will be paid strictly by cheque.</li>
+          <li>Bring any of the following Address Proof.<br>
+            a) Aadhar Card b) Election Identity Card c) Electricity Bill d) BSNL Landline Telephone Bill e) LIC Policy, all documents must be Attached f) ½ Photo g) Trade Certificate (Bank)
+          </li>
+        </ol>
+      </div>
+
+      <div class="bank">
+        <div class="bank-title">Bank Details</div>
+        <div class="bank-lines">
+          CHAVAN AUTOMOBILES<br>
+          BANK OF MAHARASHTRA<br>
+          Branch Sakhar Peth<br>
+          A/C.NO. 60080004004<br>
+          IFSC CODE MAHB0000464<br>
+          MICR CODE 413014005
+        </div>
+        <div class="qr"><span></span></div>
+      </div>
+    </div>
+
+    <div class="bottom-strip">
+      <div class="dealer-name">चव्हाण ऑटोमोबाईल्स~</div>
+      <div>
+        <div class="branch">अक्कलकोट रोड</div>
+        <span class="phone">8805986570</span>
+      </div>
+      <div>
+        <div class="branch">सुमन नगर, बाळे</div>
+        <span class="phone">8805986835<br>8805986807</span>
+      </div>
+      <div>
+        <div class="branch">बोरामणी ब्रांच</div>
+        <span class="phone">8956507941</span>
+      </div>
+      <div>
+        <div class="branch">हदरे वस्ती</div>
+        <span class="phone">8805986565</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
